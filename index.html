@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HuquqUstoz — M2 imtihon</title>
+<style>
+:root{--navy:#0a1630;--navy2:#12224a;--card:#16295a;--gold:#d4af37;--gold2:#f0d77a;--white:#f6f8ff;--mut:#9fb0d8;--ok:#3ecf8e;--bad:#ff6b6b}
+*{box-sizing:border-box;margin:0}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(1200px 600px at 20% -10%,#1c3375 0%,var(--navy) 55%);color:var(--white);min-height:100vh;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+.hide{display:none!important}
+.card{background:linear-gradient(160deg,var(--card),var(--navy2));border:1px solid rgba(212,175,55,.18);border-radius:22px;padding:26px;box-shadow:0 10px 40px rgba(0,0,0,.35);animation:up .45s ease}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.logo{font-size:30px;font-weight:800;letter-spacing:.3px}.logo b{color:var(--gold)}
+.badge{display:inline-block;margin-top:8px;padding:5px 14px;border:1px solid var(--gold);color:var(--gold2);border-radius:99px;font-weight:600;font-size:14px}
+.tag{color:var(--mut);margin:14px 0 22px}
+#login{max-width:480px;margin:8vh auto 0;text-align:center}
+.info{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.info span{background:rgba(255,255,255,.06);padding:6px 14px;border-radius:12px;font-size:14px;color:var(--mut)}
+input{width:100%;padding:14px 16px;margin-bottom:12px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:var(--white);font-size:16px;outline:none;transition:.2s}
+input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.2)}
+button{font:inherit;cursor:pointer;border:0;border-radius:14px;padding:13px 22px;font-weight:700;transition:.2s}
+.btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1a1a}.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(212,175,55,.35)}
+.ghost{background:rgba(255,255,255,.08);color:var(--white)}.ghost:hover{background:rgba(255,255,255,.15)}
+.ghost:disabled{opacity:.35;cursor:default}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.timer{font-variant-numeric:tabular-nums;font-size:26px;font-weight:800;color:var(--gold2);background:rgba(0,0,0,.25);padding:6px 18px;border-radius:14px;border:1px solid rgba(212,175,55,.3)}
+.timer.low{color:var(--bad);border-color:var(--bad);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.55}}
+.meta{color:var(--mut);font-size:14px}.meta b{color:var(--gold2)}
+.bar{height:8px;background:rgba(255,255,255,.1);border-radius:9px;overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .4s}
+.grid{display:grid;grid-template-columns:1fr 250px;gap:18px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.qn{color:var(--gold);font-weight:700;font-size:14px;margin-bottom:6px}
+.q{font-size:20px;font-weight:700;margin-bottom:18px}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.12);color:var(--white);margin-bottom:10px;padding:14px 16px;font-weight:500}
+.opt:hover{border-color:var(--gold);transform:translateX(4px)}
+.opt .l{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);font-weight:700;font-size:14px}
+.opt.sel{border-color:var(--gold);background:rgba(212,175,55,.14)}.opt.sel .l{background:var(--gold);color:#111}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.pal h4{font-size:14px;color:var(--mut);margin-bottom:10px}
+.cells{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.cell{padding:8px 0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--mut);font-size:14px;font-weight:700}
+.cell.done{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.cell.cur{outline:2px solid #fff}
+.legend{margin-top:12px;font-size:12px;color:var(--mut)}
+.score{text-align:center}
+.ring{width:150px;height:150px;border-radius:50%;margin:10px auto 16px;display:grid;place-items:center;font-size:34px;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:18px 0}
+.stat{background:rgba(255,255,255,.06);padding:14px;border-radius:16px}.stat b{display:block;font-size:26px}
+.rev{background:rgba(255,255,255,.05);border-left:4px solid var(--bad);border-radius:12px;padding:14px;margin-bottom:10px;text-align:left}
+.rev small{color:var(--mut)}.g{color:var(--ok)}.r{color:var(--bad)}
+#sent{font-size:14px;margin-top:8px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:grid;place-items:center;padding:16px;z-index:9}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section id="login" class="card" style="text-align:center">
+  <div class="logo">Huquq<b>Ustoz</b></div>
+  <span class="badge">@huququstoz</span>
+  <p class="tag">Huquqni o‘rganing. Bilimingizni sinang.</p>
+  <div class="info"><span id="iTitle"></span><span id="iCnt"></span><span id="iMin"></span></div>
+  <input id="fn" placeholder="Ism" autocomplete="given-name">
+  <input id="ln" placeholder="Familiya" autocomplete="family-name">
+  <button class="btn" style="width:100%" onclick="begin()">Testni boshlash</button>
+  <p id="err" class="r" style="margin-top:10px"></p>
+</section>
+
+<section id="exam" class="hide">
+  <div class="top">
+    <div><div class="logo" style="font-size:20px">Huquq<b>Ustoz</b> · <span id="eTitle"></span></div>
+      <div class="meta" id="who"></div></div>
+    <div class="timer" id="timer">90:00</div>
+  </div>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="grid">
+    <div class="card">
+      <div class="qn" id="qn"></div>
+      <div class="q" id="q"></div>
+      <div id="opts"></div>
+      <div class="nav">
+        <button class="ghost" id="prev" onclick="go(-1)">← Oldingi</button>
+        <button class="btn" id="next" onclick="go(1)">Keyingi →</button>
+      </div>
+    </div>
+    <div class="card pal">
+      <h4>Belgilandi: <b id="cnt" style="color:var(--gold2)">0</b> / <span id="tot"></span></h4>
+      <div class="cells" id="cells"></div>
+      <p class="legend">🟡 belgilandi · ⚪ javobsiz</p>
+      <button class="btn" style="width:100%;margin-top:16px" onclick="finish(false)">Testni yakunlash</button>
+    </div>
+  </div>
+</section>
+
+<section id="result" class="card score hide"></section>
+</div>
+
+<script>
+const CFG={
+  BOT_TOKEN:"8819420318:AAEiPoczZhe9tgMRsaWcwVmnvSyRUHlp4Dw",  // @huququstozBot
+  CHAT_ID:"6345301727",
+  EXAM_TITLE:"M2 imtihon",
+  MINUTES:90,
+  SHUFFLE_Q:true,           // savollar tartibi aralashsin
+  SHUFFLE_O:true            // variantlar tartibi aralashsin
+};
+const QUESTIONS=[
+ {
+  "q": "Yuridik javobgarlikka asos nima?",
+  "o": [
+   "Sud hukmi",
+   "Huquqbuzarlik",
+   "Jarima",
+   "Hayfsan"
+  ],
+  "a": 1,
+  "e": "Huquqiy normalarni buzish (huquqbuzarlik) javobgarlikka asos bo'ladi"
+ },
+ {
+  "q": "Intizomiy jazo intizomiy qilmish aniqlangan kundan boshlab qancha muddatdan kechiktirmay qo'llanilishi kerak?",
+  "o": [
+   "1 hafta",
+   "15 kun",
+   "1 oy",
+   "3 oy"
+  ],
+  "a": 2,
+  "e": "Aniqlangan kundan boshlab 1 oydan kechiktirmay"
+ },
+ {
+  "q": "Quyidagilardan qaysi biri intizomiy jazo choralariga kirmaydi?",
+  "o": [
+   "Ma'muriy qamoq",
+   "Hayfsan",
+   "Jarima",
+   "Mehnat shartnomasini bekor qilish"
+  ],
+  "a": 0,
+  "e": "Intizomiy jazolar: hayfsan, jarima, mehnat shartnomasini bekor qilish"
+ },
+ {
+  "q": "Ma'muriy qamoq muddati odatda qancha?",
+  "o": [
+   "1 dan 5 sutkagacha",
+   "5 dan 10 sutkagacha",
+   "10 dan 20 sutkagacha",
+   "3 dan 15 sutkagacha"
+  ],
+  "a": 3,
+  "e": "Odatda 3 dan 15 sutkagacha, ayrim hollarda 30 sutkagacha"
+ },
+ {
+  "q": "Qaysi jazolar faqat harbiy xizmatchilarga nisbatan qo'llaniladi?",
+  "o": [
+   "Majburiy jamoat ishlari va axloq tuzatish ishlari",
+   "Xizmat bo'yicha cheklash va intizomiy qismga jo'natish",
+   "Jarima va ozodlikni cheklash",
+   "Muayyan huquqdan mahrum qilish va ozodlikdan mahrum qilish"
+  ],
+  "a": 1,
+  "e": "Xizmat bo'yicha cheklash va intizomiy qismga jo'natish"
+ },
+ {
+  "q": "O'zbekistonda o'lim jazosi qachondan boshlab bekor qilingan?",
+  "o": [
+   "2001-yil 1-yanvar",
+   "2005-yil 1-avgust",
+   "2008-yil 1-yanvar",
+   "2010-yil 1-yanvar"
+  ],
+  "a": 2,
+  "e": "2005-yil 1-avgustdagi farmonga ko'ra, 2008-yil 1-yanvardan"
+ },
+ {
+  "q": "Jinoyat sodir etganlik uchun jarima bazaviy hisoblash miqdorining necha baravaridan necha baravarigacha belgilanadi?",
+  "o": [
+   "1 dan 100 gacha",
+   "2 dan 20 gacha",
+   "5 dan 600 gacha",
+   "10 dan 1000 gacha"
+  ],
+  "a": 2,
+  "e": "5 dan 600 baravarigacha"
+ },
+ {
+  "q": "14 yoshdan 18 yoshgacha bo'lgan voyaga yetmaganlar ota-onasining roziligisiz nimani mustaqil amalga oshirishga haqli?",
+  "o": [
+   "O'z ish haqi, stipendiyasi va boshqa daromadlarini tasarruf etish",
+   "Ko'chmas mulkni sotish",
+   "Yirik qarz shartnomasi tuzish",
+   "Avtomobil sotib olish"
+  ],
+  "a": 0,
+  "e": "Boshqa variantlar uchun ota-ona roziligi kerak"
+ },
+ {
+  "q": "Emansipatsiya (to'la muomalaga layoqatli deb e'lon qilish) necha yoshga to'lgan voyaga yetmaganga nisbatan qo'llanishi mumkin?",
+  "o": [
+   "14",
+   "15",
+   "16",
+   "18"
+  ],
+  "a": 2,
+  "e": "16 yosh va mehnat shartnomasi yoki tadbirkorlik sharti bilan"
+ },
+ {
+  "q": "Umumiy jinoiy javobgarlik yoshi necha yosh?",
+  "o": [
+   "14",
+   "16",
+   "18",
+   "15"
+  ],
+  "a": 1,
+  "e": "14 yosh faqat ayrim jinoyatlar uchun"
+ },
+ {
+  "q": "Voyaga yetmagan gumon qilinuvchi yoki ayblanuvchini so'roq qilishning umumiy davomiyligi bir kunda necha soatdan oshmasligi kerak?",
+  "o": [
+   "3 soat",
+   "4 soat",
+   "8 soat",
+   "6 soat"
+  ],
+  "a": 3,
+  "e": "1 soatlik tanaffus hisobga olinmaydi"
+ },
+ {
+  "q": "Voyaga yetmaganlarga majburiy jamoat ishlari qancha muddatga tayinlanadi?",
+  "o": [
+   "60 soatdan 240 soatgacha",
+   "20 soatdan 120 soatgacha",
+   "100 soatdan 400 soatgacha",
+   "240 soatdan 480 soatgacha"
+  ],
+  "a": 0,
+  "e": "60–240 soat"
+ },
+ {
+  "q": "16 yoshgacha bo'lgan guvoh yoki jabrlanuvchi nima haqida ogohlantirilmaydi?",
+  "o": [
+   "Sud majlisi vaqti haqida",
+   "Ko'rsatma berishdan bosh tortganlik va bila turib yolg'on ko'rsatma berganlik uchun javobgarlik haqida",
+   "Himoyachi ishtiroki haqida",
+   "Ehtiyot chorasi qo'llanilishi haqida"
+  ],
+  "a": 1,
+  "e": "Ularga faqat haqqoniy ko'rsatma berish ma'naviy burch ekanligi tushuntiriladi"
+ },
+ {
+  "q": "Konstitutsiyaga ko'ra, shaxs sud qarorisiz necha soatdan ortiq ushlab turilishi mumkin emas?",
+  "o": [
+   "24 soat",
+   "36 soat",
+   "48 soat",
+   "72 soat"
+  ],
+  "a": 2,
+  "e": "Konstitutsiya, 27-modda"
+ },
+ {
+  "q": "Aybsizlik prezumpsiyasi Konstitutsiyaning nechanchi moddasida mustahkamlangan?",
+  "o": [
+   "19-modda",
+   "24-modda",
+   "27-modda",
+   "28-modda"
+  ],
+  "a": 3,
+  "e": "Konstitutsiya, 28-modda"
+ },
+ {
+  "q": "Bir shaxsga nisbatan bir vaqtning o'zida nechta ehtiyot chorasi qo'llanilishi mumkin?",
+  "o": [
+   "Faqat bitta",
+   "Ikkita",
+   "Uchtagacha",
+   "Cheklov yo'q"
+  ],
+  "a": 0,
+  "e": "Faqat bitta ehtiyot chorasi"
+ },
+ {
+  "q": "Ota-onalar voyaga yetmagan bolalarni tarbiyalash va ularga ta'lim berish majburiyatini bajarmasa, qanday javobgarlik kelib chiqadi?",
+  "o": [
+   "Jinoiy",
+   "Ma'muriy",
+   "Intizomiy",
+   "Fuqaroviy"
+  ],
+  "a": 1,
+  "e": "Ma'muriy javobgarlik to'g'risidagi kodeks, 47-modda"
+ },
+ {
+  "q": "Ma'muriy huquqbuzarlikni 16 yoshga to'lmagan shaxs sodir etgan bo'lsa, nima qilinadi?",
+  "o": [
+   "Ma'muriy qamoq qo'llanadi",
+   "Jarima to'lashi shart",
+   "Ma'muriy huquqbuzarlik to'g'risidagi ishni boshlash mumkin emas, boshlangan ish tugatiladi",
+   "Ish faqat sud tomonidan ko'riladi"
+  ],
+  "a": 2,
+  "e": "Ma'muriy javobgarlik to'g'risidagi kodeks, 14-modda"
+ },
+ {
+  "q": "Vasiylik kimlarga belgilanadi?",
+  "o": [
+   "14 yoshdan 18 yoshgacha bo'lgan yetim bolalarga",
+   "Faqat 18 yoshdan oshgan shaxslarga",
+   "Faqat muomala layoqati cheklangan fuqarolarga",
+   "14 yoshga to'lmagan yetim bolalarga"
+  ],
+  "a": 3,
+  "e": "14 yoshgacha yetim va ota-ona qaramog'idan mahrum bolalarga"
+ },
+ {
+  "q": "15 yoshga to'lgan o'quvchini o'qishdan bo'sh vaqtida yengil ishga qabul qilish uchun qaysi shart talab qilinadi?",
+  "o": [
+   "Mahalliy hokimning ruxsati",
+   "Ota-onadan birining yoki ota-ona o'rnini bosuvchi shaxsning yozma roziligi",
+   "Prokurorning ruxsati",
+   "Sud qarori"
+  ],
+  "a": 1,
+  "e": "Boshqa shartlar: sog'liq, axloq va ta'limga zarar yetkazmaslik"
+ },
+ {
+  "q": "16 yoshdan 18 yoshgacha bo'lgan xodimlar uchun eng ko'p haftalik ish vaqti qancha?",
+  "o": [
+   "24 soat",
+   "30 soat",
+   "36 soat",
+   "40 soat"
+  ],
+  "a": 2,
+  "e": "15–16 yosh uchun 24 soat"
+ },
+ {
+  "q": "18 yoshgacha bo'lgan xodimlarga beriladigan yillik mehnat ta'tili kamida qancha bo'lishi kerak?",
+  "o": [
+   "15 kalendar kun",
+   "21 kalendar kun",
+   "24 kalendar kun",
+   "30 kalendar kun"
+  ],
+  "a": 3,
+  "e": "Mehnat kodeksi, 418-modda"
+ },
+ {
+  "q": "18 yoshgacha bo'lgan xodim bilan mehnat shartnomasini ish beruvchining tashabbusi bilan bekor qilish uchun umumiy tartibdan tashqari yana nima talab etiladi?",
+  "o": [
+   "Mahalliy mehnat organining roziligi",
+   "Prokuror sanksiyasi",
+   "Maktab direktorining roziligi",
+   "Mahalla fuqarolar yig'inining qarori"
+  ],
+  "a": 0,
+  "e": "Mehnat kodeksi, 421-modda"
+ },
+ {
+  "q": "Fuqarolik nima?",
+  "o": [
+   "Shaxsning davlatda vaqtincha yashashi",
+   "Shaxsning muayyan davlat bilan doimiy huquqiy aloqasi",
+   "Shaxsning davlat tilini bilishi",
+   "Shaxsning davlat xizmatida ishlashi"
+  ],
+  "a": 1,
+  "e": "Fuqarolik shaxs va davlat o'rtasidagi doimiy huquqiy aloqa"
+ },
+ {
+  "q": "Quyidagilardan qaysi biri O'zbekiston fuqaroligiga ega bo'lish asosi emas?",
+  "o": [
+   "Tug'ilganlik bo'yicha",
+   "Bola farzandlikka olinganda",
+   "Fuqarolikni tiklash natijasida",
+   "Chet elda mulk sotib olish"
+  ],
+  "a": 3,
+  "e": "Asoslar: tug'ilish, farzandlikka olish, qabul qilish, tiklash"
+ },
+ {
+  "q": "Fuqarolikka qabul qilishning umumiy tartibida fuqaroligi bo'lmagan shaxs O'zbekistonda uzluksiz necha yil doimiy yashagan bo'lishi kerak?",
+  "o": [
+   "1 yil",
+   "3 yil",
+   "5 yil",
+   "10 yil"
+  ],
+  "a": 2,
+  "e": "Yashash guvohnomasi olingan kundan 5 yil uzluksiz"
+ },
+ {
+  "q": "Fuqaroligi bo'lmagan shaxsning O'zbekistonda bo'lish muddati uzluksiz hisoblanishi uchun u bir yilda jami necha kundan ko'p bo'lmagan muddatda tashqariga chiqqan bo'lishi kerak?",
+  "o": [
+   "90 kun",
+   "183 kun",
+   "270 kun",
+   "365 kun"
+  ],
+  "a": 1,
+  "e": "Bir yilda jami 183 kundan oshmasa, muddat uzluksiz hisoblanadi"
+ },
+ {
+  "q": "Chet elga chiqish uchun beriladigan biometrik xorijiy pasport necha yilga beriladi?",
+  "o": [
+   "10 yil",
+   "5 yil",
+   "3 yil",
+   "15 yil"
+  ],
+  "a": 0,
+  "e": "2019-yil 1-yanvardan chiqish vizasi o'rniga 10 yillik pasport"
+ },
+ {
+  "q": "15 yoshdan 18 yoshgacha bo'lgan fuqarolar kattalar hamrohligisiz xorijga chiqishi uchun nima kerak?",
+  "o": [
+   "Faqat sud ruxsati",
+   "Faqat ota-onaning og'zaki roziligi",
+   "Ota-ona yoki vasiylarning notarial tasdiqlangan roziligi",
+   "Mahalla qo'mitasining xulosasi"
+  ],
+  "a": 2,
+  "e": "Notarial tasdiqlangan rozilik kerak"
+ },
+ {
+  "q": "ID-karta 1 yoshdan 16 yoshgacha bo'lgan bolalarga necha yil muddatga beriladi?",
+  "o": [
+   "2 yil",
+   "5 yil",
+   "10 yil",
+   "3 yil"
+  ],
+  "a": 1,
+  "e": "0–1 yosh: 2 yil; 1–16 yosh: 5 yil; 16 yoshdan: 10 yil"
+ },
+ {
+  "q": "Fuqarolikka qabul qilishning soddalashtirilgan tartibi kimga nisbatan qo'llanadi?",
+  "o": [
+   "Faqat olimlar va sportchilarga",
+   "Faqat apatridlarga",
+   "Faqat O'zbekistonda tug'ilganlarga",
+   "Vatandosh hisoblangan chet davlat fuqarosi yoki fuqaroligi bo'lmagan shaxsga"
+  ],
+  "a": 3,
+  "e": "Vatandoshga, ajdodi O'zbekiston fuqarosi bo'lgan shaxsga"
+ },
+ {
+  "q": "Fuqarolikka qabul qilish, fuqarolikni qayta tiklash va fuqarolikdan chiqish qanday hujjat bilan rasmiylashtiriladi?",
+  "o": [
+   "Vazirlar Mahkamasi qarori",
+   "Prezident farmoni",
+   "Ichki ishlar vazirligi buyrug'i",
+   "Senat qarori"
+  ],
+  "a": 1,
+  "e": "Prezident farmoni bilan"
+ },
+ {
+  "q": "Quyidagilardan qaysi biri fuqarolik tugatilishiga asos bo'lmaydi?",
+  "o": [
+   "Chet davlatning harbiy xizmatiga kirish",
+   "Soxta hujjat taqdim etib fuqarolikka qabul qilinish",
+   "Ixtiyoriy ravishda chet davlat fuqaroligini olish",
+   "Chet elda uzoq muddat yashash"
+  ],
+  "a": 3,
+  "e": "Asoslar: chet davlat xizmati, soxta hujjat, ixtiyoriy chet fuqaroligi"
+ },
+ {
+  "q": "\"Yagona fuqarolik o'rnatiladi\" degan qoida Konstitutsiyaning nechanchi moddasida berilgan?",
+  "o": [
+   "8-modda",
+   "22-modda",
+   "24-modda",
+   "27-modda"
+  ],
+  "a": 1,
+  "e": "Konstitutsiya, 22-modda"
+ },
+ {
+  "q": "Fuqarolik masalalariga oid materiallarni ko'rib chiqish qaysi holatda tugatilishi mumkin?",
+  "o": [
+   "Shaxs qidiruvda bo'lsa",
+   "Shaxs ariza bergan bo'lsa",
+   "Shaxs xorijda yashasa",
+   "Shaxs ishlamasa"
+  ],
+  "a": 0,
+  "e": "Boshqa asoslar: bajarilmagan majburiyat, jinoiy javobgarlik/sudlanganlik"
+ },
+ {
+  "q": "Inson huquqlari bo'yicha O'zbekiston Respublikasining Milliy strategiyasi qachon qabul qilingan?",
+  "o": [
+   "2018-yil 23-iyun",
+   "2019-yil 23-iyun",
+   "2020-yil 23-iyun",
+   "2020-yil 23-sentyabr"
+  ],
+  "a": 2,
+  "e": "2020-yil 23-iyun (23-sentyabr BMT Bosh Assambleyasidagi nutq sanasi)"
+ },
+ {
+  "q": "Quyidagilardan qaysi biri fuqaroligini tiklash iltimosnomasiga ilova qilinadigan hujjatlar qatoriga kirmaydi?",
+  "o": [
+   "So'rovnoma",
+   "Davlat boji to'langanligini tasdiqlovchi hujjat",
+   "Tirikchilikning qonuniy manbasini tasdiqlovchi hujjat",
+   "Oliy ma'lumot to'g'risidagi diplom"
+  ],
+  "a": 3,
+  "e": "Diplom talab qilinadigan hujjatlar ro'yxatida yo'q"
+ },
+ {
+  "q": "Chet eldagi vatandoshlarning 2-toifasiga kimlar kiradi?",
+  "o": [
+   "Chet elda doimiy yashovchi O'zbekiston fuqarolari",
+   "Xorijga chiqib chet el fuqaroligini olgan, lekin Vataniga ma'naviy mansublikni his qiluvchi shaxslar va ularning avlodlari",
+   "Faqat chet elda o'qiyotgan talabalar",
+   "Faqat diplomatlar"
+  ],
+  "a": 1,
+  "e": "1-toifa fuqarolar, 3-toifa o'zini o'zbek yoki qoraqalpoq deb biluvchi chet elliklar"
+ },
+ {
+  "q": "Agar suhbat malakali tarjimonsiz olib borilsa, shaxs tushunmaydigan tildagi bayonnomani imzolash talab qilinganda nima qilishi mumkin?",
+  "o": [
+   "Darhol imzolashi shart",
+   "Faqat advokat bilan imzolashi mumkin",
+   "Imzolagandan keyin e'tiroz bildira olmaydi",
+   "Bunday hujjatni imzolashdan voz kechishi mumkin"
+  ],
+  "a": 3,
+  "e": "Imzolangan sahifada huquq buzilganini qayd etib qo'yish ham mumkin"
+ },
+ {
+  "q": "\"O'zbekiston xalqini millatidan qat'i nazar, O'zbekiston Respublikasining fuqarolari tashkil etadi\" degan qoida Konstitutsiyaning nechanchi moddasida berilgan?",
+  "o": [
+   "8-modda",
+   "11-modda",
+   "22-modda",
+   "24-modda"
+  ],
+  "a": 0,
+  "e": "Konstitutsiya, 8-modda"
+ },
+ {
+  "q": "\"Qattiq\" konstitutsiyaga misol sifatida keltirilgan AQSH Konstitutsiyasiga 200 yildan ortiq vaqt davomida nechta o'zgartirish kiritilgan?",
+  "o": [
+   "7 ta",
+   "17 ta",
+   "27 ta",
+   "37 ta"
+  ],
+  "a": 2,
+  "e": "27 ta o'zgartirish"
+ },
+ {
+  "q": "Konstitutsiyalar nechta mezonga ko'ra tasniflanadi?",
+  "o": [
+   "3 ta",
+   "5 ta",
+   "7 ta",
+   "10 ta"
+  ],
+  "a": 1,
+  "e": "Ifoda shakli, qabul qilish tartibi, boshqaruv shakli, davlat tuzilishi, o'zgartirish tartibi"
+ },
+ {
+  "q": "Mustaqillik deklaratsiyasi qabul qilingan Oliy Kengash sessiyasida Konstitutsiya loyihasini tayyorlash uchun necha kishidan iborat komissiya tuzilgan?",
+  "o": [
+   "25 kishi",
+   "32 kishi",
+   "100 kishi",
+   "64 kishi"
+  ],
+  "a": 3,
+  "e": "64 kishilik komissiya"
+ },
+ {
+  "q": "Konstitutsiyaga o'zgartirish kiritish uchun konstitutsiyaviy qonun Oliy Majlis palatalari umumiy sonining kamida qancha qismi ko'pchiligi bilan qabul qilinishi kerak?",
+  "o": [
+   "Oddiy ko'pchilik",
+   "Yarmi",
+   "Uchdan ikki qismi",
+   "To'rtdan uch qismi"
+  ],
+  "a": 2,
+  "e": "154-modda: 2/3 ko'pchilik yoki referendum"
+ },
+ {
+  "q": "Hokimiyatlarning bo'linishi prinsipi Konstitutsiyaning nechanchi moddasida mustahkamlangan?",
+  "o": [
+   "11-modda",
+   "7-modda",
+   "17-modda",
+   "3-modda"
+  ],
+  "a": 0,
+  "e": "Qonun chiqaruvchi, ijro etuvchi va sud hokimiyati"
+ },
+ {
+  "q": "Ijro etuvchi hokimiyatning oliy organi qaysi?",
+  "o": [
+   "Oliy Majlis",
+   "Konstitutsiyaviy sud",
+   "Oliy sud",
+   "Vazirlar Mahkamasi"
+  ],
+  "a": 3,
+  "e": "Qonun chiqaruvchi hokimiyat — Oliy Majlis, sud hokimiyati — Oliy va Konstitutsiyaviy sudlar"
+ },
+ {
+  "q": "\"O'zbekiston Respublikasining Davlat madhiyasi to'g'risida\"gi qonun qachon qabul qilingan?",
+  "o": [
+   "1991-yil 18-noyabr",
+   "1992-yil 2-iyul",
+   "1992-yil 10-dekabr",
+   "1990-yil 20-iyun"
+  ],
+  "a": 2,
+  "e": "Bayroq — 18.11.1991, gerb — 02.07.1992, madhiya — 10.12.1992"
+ },
+ {
+  "q": "Xotin-qizlar va erkaklarning teng huquq va imkoniyatlari Konstitutsiyaning nechanchi moddasida mustahkamlangan?",
+  "o": [
+   "19-modda",
+   "58-modda",
+   "11-modda",
+   "7-modda"
+  ],
+  "a": 1,
+  "e": "19-modda esa qonun oldida tenglik haqida"
+ },
+ {
+  "q": "Huquqiy nigilizm nima?",
+  "o": [
+   "Huquq va qonunlarga salbiy, ularni inkor qiluvchi va hurmatsiz munosabatda bo'lish",
+   "Huquq haqidagi bilimlar yig'indisi",
+   "Qonunlarga ongli rioya qilish",
+   "Huquqiy bilim darajasi"
+  ],
+  "a": 0,
+  "e": "Boshqa variantlar huquqiy ong va madaniyatga tegishli"
+ },
+ {
+  "q": "O'zbekiston Birlashgan Millatlar Tashkilotiga qaysi yilda a'zo bo'lgan?",
+  "o": [
+   "1991-yil",
+   "1992-yil",
+   "1993-yil",
+   "1995-yil"
+  ],
+  "a": 1,
+  "e": "MDH — 1991, YUNESKO — 1993, YUNISEF — 1995"
+ }
+];
+const $=s=>document.querySelector(s),L=["A","B","C","D"];
+let S=JSON.parse(localStorage.getItem("hu_state")||"null"),tm;
+const save=()=>localStorage.setItem("hu_state",JSON.stringify(S));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const show=id=>["login","exam","result"].forEach(x=>$("#"+x).classList.toggle("hide",x!=id));
+$("#iTitle").textContent=CFG.EXAM_TITLE;$("#iCnt").textContent=QUESTIONS.length+" ta savol";$("#iMin").textContent=CFG.MINUTES+" daqiqa";
+$("#eTitle").textContent=CFG.EXAM_TITLE;$("#tot").textContent=QUESTIONS.length;
+
+function begin(){
+  const f=$("#fn").value.trim(),l=$("#ln").value.trim();
+  if(f.length<2||l.length<2){$("#err").textContent="Ism va familiyani to‘liq kiriting";return}
+  const idx=QUESTIONS.map((_,i)=>i);if(CFG.SHUFFLE_Q)shuffle(idx);
+  S={name:f+" "+l,start:Date.now(),end:Date.now()+CFG.MINUTES*60000,cur:0,ans:{},done:false,
+     order:idx.map(i=>({i,o:CFG.SHUFFLE_O?shuffle([0,1,2,3]):[0,1,2,3]}))};
+  save();runExam();
+}
+function runExam(){
+  show("exam");$("#who").innerHTML="👤 "+esc(S.name)+" · <b>@huququstoz</b>";
+  const c=$("#cells");c.innerHTML="";
+  S.order.forEach((_,p)=>{const b=document.createElement("button");b.className="cell";b.textContent=p+1;b.onclick=()=>{S.cur=p;save();draw()};c.appendChild(b)});
+  draw();tick();clearInterval(tm);tm=setInterval(tick,500);
+}
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+function draw(){
+  const p=S.cur,it=S.order[p],Q=QUESTIONS[it.i],n=S.order.length;
+  $("#qn").textContent=`Savol ${p+1} / ${n}`;$("#q").textContent=Q.q;
+  $("#opts").innerHTML=it.o.map((oi,k)=>`<button class="opt ${S.ans[p]===oi?"sel":""}" onclick="pick(${oi})"><span class="l">${L[k]}</span>${esc(Q.o[oi])}</button>`).join("");
+  $("#prev").disabled=p==0;$("#next").disabled=p==n-1;
+  const done=Object.keys(S.ans).length;$("#cnt").textContent=done;$("#bar").style.width=done/n*100+"%";
+  [...$("#cells").children].forEach((b,i)=>{b.classList.toggle("done",S.ans[i]!==undefined);b.classList.toggle("cur",i==p)});
+}
+function pick(oi){S.ans[S.cur]=oi;save();draw()}
+function go(d){S.cur+=d;save();draw()}
+function tick(){
+  const left=Math.max(0,S.end-Date.now()),m=Math.floor(left/60000),s=Math.floor(left/1000)%60;
+  const t=$("#timer");t.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");t.classList.toggle("low",left<5*60000);
+  if(left==0){clearInterval(tm);finish(true)}
+}
+function finish(auto){
+  if(!auto){
+    const un=S.order.length-Object.keys(S.ans).length;
+    if(!confirm(un?`${un} ta savolga javob berilmagan. Yakunlaysizmi?`:"Testni yakunlaysizmi?"))return;
+  }
+  clearInterval(tm);
+  let ok=0;S.order.forEach((it,p)=>{if(S.ans[p]===QUESTIONS[it.i].a)ok++});
+  const total=S.order.length,ans=Object.keys(S.ans).length;
+  S.res={name:S.name,exam:CFG.EXAM_TITLE,total,answered:ans,correct:ok,wrong:ans-ok,percent:Math.round(ok/total*1000)/10,
+         seconds:Math.round((Math.min(Date.now(),S.end)-S.start)/1000)};
+  S.done=true;S.sent=false;save();showResult();send();
+}
+function showResult(){
+  show("result");const r=S.res,un=r.total-r.answered;
+  let rev="";
+  S.order.forEach((it,p)=>{const Q=QUESTIONS[it.i];if(S.ans[p]===Q.a)return;
+    rev+=`<div class="rev"><b>${esc(Q.q)}</b><br>${S.ans[p]===undefined?'<span class="r">Javob berilmagan</span>':'<span class="r">Sizning javob: '+esc(Q.o[S.ans[p]])+'</span>'}<br><span class="g">To‘g‘ri javob: ${esc(Q.o[Q.a])}</span><br><small>${esc(Q.e||"")}</small></div>`});
+  $("#result").innerHTML=`<div class="logo">Huquq<b>Ustoz</b></div><p class="tag">${esc(r.name)} · ${esc(r.exam)}</p>
+  <div class="ring" style="background:conic-gradient(var(--gold) ${r.percent*3.6}deg,rgba(255,255,255,.1) 0)"><div style="background:var(--navy2);width:122px;height:122px;border-radius:50%;display:grid;place-items:center">${r.percent}%</div></div>
+  <h2>Natijangiz: ${r.correct}/${r.total} — ${r.percent}%</h2>
+  <div class="stats"><div class="stat"><b>${r.answered}</b>yechilgan</div><div class="stat"><b class="g">${r.correct}</b>to‘g‘ri</div><div class="stat"><b class="r">${r.wrong}</b>noto‘g‘ri</div><div class="stat"><b>${un}</b>javobsiz</div><div class="stat"><b>${Math.floor(r.seconds/60)} daq</b>sarflandi</div></div>
+  <p id="sent"></p><button class="ghost hide" id="retry" onclick="send()">Qayta yuborish</button>
+  <h3 style="margin:22px 0 12px;text-align:left">Xato va javobsiz savollar</h3>${rev||'<p class="g">Barcha javoblar to‘g‘ri! 🎉</p>'}
+  <button class="btn" style="margin-top:14px" onclick="localStorage.removeItem('hu_state');location.reload()">Yangi urinish</button>`;
+  setSent();
+}
+function setSent(){const e=$("#sent");if(!e)return;e.textContent=S.sent?"✅ Natija o‘qituvchiga yuborildi":"⏳ Natija yuborilmoqda...";$("#retry").classList.add("hide")}
+const call=(m,b)=>fetch(`https://api.telegram.org/bot${CFG.BOT_TOKEN}/${m}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}).then(r=>r.json());
+async function send(){
+  if(S.sent)return;const r=S.res;
+  try{
+    const a=await call("sendMessage",{chat_id:CFG.CHAT_ID,text:`📝 ${r.exam} natijalari\n\n👤 ${r.name}\n📋 Yechgan: ${r.answered}/${r.total}\n✅ To‘g‘ri: ${r.correct}\n❌ Noto‘g‘ri: ${r.wrong}\n⬜ Javobsiz: ${r.total-r.answered}\n📊 Natija: ${r.percent}%\n⏱ Vaqt: ${Math.floor(r.seconds/60)} daq ${r.seconds%60} son`});
+    if(!a.ok)throw 0;S.sent=true;save();setSent();
+  }catch(e){$("#sent").textContent="⚠️ Yuborib bo‘lmadi. Internetni tekshiring.";$("#retry").classList.remove("hide");return}
+  summary(r);
+}
+async function summary(r){
+  const id=CFG.CHAT_ID;
+  try{
+    const pm=((await call("getChat",{chat_id:id})).result||{}).pinned_message;
+    const rows={};let mid=null;
+    if(pm&&pm.text&&pm.text.startsWith("📊")){mid=pm.message_id;
+      pm.text.split("\n").forEach(l=>{const m=l.match(/^\d+\.\s+(.+?)\s+—\s+(\d+)\/(\d+)\s+—\s+([\d.]+)%$/);if(m)rows[m[1].toLowerCase()]={name:m[1],correct:+m[2],total:+m[3],percent:+m[4]}})}
+    rows[r.name.toLowerCase()]={name:r.name,correct:r.correct,total:r.total,percent:r.percent};
+    const list=Object.values(rows).sort((a,b)=>b.correct-a.correct);
+    const text=`📊 ${r.exam} — umumiy jadval (${list.length} ta o‘quvchi)\n\n`+list.slice(0,90).map((x,i)=>`${i+1}. ${x.name} — ${x.correct}/${x.total} — ${x.percent}%`).join("\n");
+    let ok=false;
+    if(mid)ok=(await call("editMessageText",{chat_id:id,message_id:mid,text})).ok;
+    if(!ok){const s=await call("sendMessage",{chat_id:id,text});if(s.ok)await call("pinChatMessage",{chat_id:id,message_id:s.result.message_id,disable_notification:true})}
+  }catch(e){}
+}
+if(S&&S.done)showResult();else if(S)runExam();else show("login");
+</script>
+</body>
+</html>
